@@ -1,6 +1,6 @@
 # Makefile
 
-REGISTRY ?= registry.cn-shanghai.aliyuncs.com/openhydra
+REGISTRY ?= registry.cn-hangzhou.aliyuncs.com/fishing01
 TAG ?=
 
 # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
