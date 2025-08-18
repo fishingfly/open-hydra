@@ -1,0 +1,186 @@
+#JupyterLab + Python 基础环境
+apiVersion: open-hydra-server.openhydra.io/v1
+kind: Device
+metadata:
+  name: admin-python38
+spec:
+  openHydraUsername: admin
+  sandboxName: python38-jupyter
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openhydra-deploy-admin-python38
+  namespace: open-hydra
+  labels:
+    app: openhydra-admin-python38
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openhydra-admin-python38
+  template:
+    metadata:
+      labels:
+        app: openhydra-admin-python38
+    spec:
+      containers:
+        - name: openhydra-deploy-admin-container
+          image: registry.cn-shanghai.aliyuncs.com/openhydra/jupyter:Python-3.8.18-dual-lan
+          ports:
+            - containerPort: 8888
+          resources:
+            limits:
+              cpu: 1
+              memory: 2Gi
+            requests:
+              cpu: 1
+              memory: 2Gi
+          env:
+            - name: OPENHYDRA_USER
+              value: admin
+            - name: OPENHYDRA_JUPYTER_LAB
+              value: admin-jupyter-lab
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openhydra-service-admin-python38
+  namespace: open-hydra
+spec:
+  selector:
+    app: openhydra-admin-python38
+  type: NodePort
+  ports:
+    - name: jupyter
+      port: 8888 #假设
+      targetPort: 8888
+      nodePort: 31181 #假设
+
+# TensorFlow + GPU +JupyterLab
+apiVersion: open-hydra-server.openhydra.io/v1
+kind: Device
+metadata:
+  name: admin-tensorflow
+spec:
+  openHydraUsername: admin
+  sandboxName: tensorflow-gpu
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openhydra-deploy-admin-tensorflow
+  namespace: open-hydra
+  labels:
+    app: openhydra-admin-tensorflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openhydra-admin-tensorflow
+  template:
+    metadata:
+      labels:
+        app: openhydra-admin-tensorflow
+    spec:
+      containers:
+        - name: openhydra-deploy-admin-container
+          image: registry.cn-shanghai.aliyuncs.com/openhydra/tensorflow:latest-gpu-with-jlab
+          ports:
+            - containerPort: 8888
+          resources:
+            limits:
+              cpu: 2
+              memory: 4Gi
+              mthreads.com/sgpu-memory: 8
+            requests:
+              cpu: 2
+              memory: 4Gi
+              mthreads.com/sgpu-memory: 8
+          env:
+            - name: OPENHYDRA_USER
+              value: admin
+            - name: OPENHYDRA_JUPYTER_LAB
+              value: admin-jupyter-lab
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openhydra-service-admin-tensorflow
+  namespace: open-hydra
+spec:
+  selector:
+    app: openhydra-admin-tensorflow
+  type: NodePort
+  ports:
+    - name: jupyter
+      port: 8888
+      targetPort: 8888
+      nodePort: 31182
+
+# PaddlePaddle + GPU +JUpyterLab
+apiVersion: open-hydra-server.openhydra.io/v1
+kind: Device
+metadata:
+  name: admin-paddle
+spec:
+  openHydraUsername: admin
+  sandboxName: paddle-gpu
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openhydra-deploy-admin-paddle
+  namespace: open-hydra
+  labels:
+    app: openhydra-admin-paddle
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: openhydra-admin-paddle
+  template:
+    metadata:
+      labels:
+        app: openhydra-admin-paddle
+    spec:
+      containers:
+        - name: openhydra-deploy-admin-container
+          image: registry.cn-shanghai.aliyuncs.com/openhydra/paddle:2.6.0-gpu-cuda12.0-cudnn8.9-trt8.6-jlab
+          ports:
+            - containerPort: 8888
+          resources:
+            limits:
+              cpu: 2
+              memory: 4Gi
+              mthreads.com/sgpu-memory: 8
+            requests:
+              cpu: 2
+              memory: 4Gi
+              mthreads.com/sgpu-memory: 8
+          env:
+            - name: OPENHYDRA_USER
+              value: admin
+            - name: OPENHYDRA_JUPYTER_LAB
+              value: admin-jupyter-lab
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openhydra-service-admin-paddle
+  namespace: open-hydra
+spec:
+  selector:
+    app: openhydra-admin-paddle
+  type: NodePort
+  ports:
+    - name: jupyter
+      port: 8888
+      targetPort: 8888
+      nodePort: 31183

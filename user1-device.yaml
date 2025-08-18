@@ -1,0 +1,7 @@
+apiVersion: open-hydra-server.openhydra.io/v1
+kind: Device
+metadata:
+  name: user1
+spec:
+  openHydraUsername: user1
+  sandboxName: jupyter-lab # 默认我们已经在 config map 里配置了 jupyter-lab

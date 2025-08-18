@@ -41,19 +41,21 @@ apiVersion: v1
 data:
   config.yaml: |
     podAllocatableLimit: -1
-    defaultCpuPerDevice: 2000
-    defaultRamPerDevice: 8192
-    defaultGpuPerDevice: 0
+    defaultCpuPerDevice: 1000
+    defaultRamPerDevice: 4096
+    defaultGpuPerDevice: 4
     datasetBasePath: /mnt/public-dataset
     courseBasePath: /mnt/public-course
     workspacePath: /mnt/workspace
-    defaultGpuDriver: nvidia.com/gpu
+    defaultGpuDriver: mthreads.com/sgpu-memory
+    use_default_gpu_config_when_zero_is_given: true
     applyPortNameForIngress:
       jupyter-lab: lab
     gpuResourceKeys:
       - nvidia.com/gpu
       - amd.com/gpu
-    serverIP: "localhost"
+      - mthreads.com/sgpu-memory
+    serverIP: "10.1.0.8"
     patchResourceNotRelease: true
     disableAuth: true
     mysqlConfig:
@@ -99,7 +101,8 @@ spec:
       serviceAccountName: open-hydra-admin
       containers:
       - name: open-hydra-api
-        image: registry.cn-shanghai.aliyuncs.com/openhydra/open-hydra-server:latest
+        image: registry.cn-hangzhou.aliyuncs.com/fishing01/open-hydra-server:main-3413647f79a7023407d8470939e74cf87ccc6c6b-20250804064135
+        #image: registry.cn-shanghai.aliyuncs.com/openhydra/open-hydra-server:latest
         imagePullPolicy: IfNotPresent
         command: ["open-hydra-server", "run","--open-hydra-server-config", "/etc/open-hydra/config.yaml"]
         ports:
@@ -321,6 +324,7 @@ data:
                 "cpuImageName": "registry.cn-shanghai.aliyuncs.com/openhydra/paddle:2.6.0-jlab",
                 "gpuImageSet": {
                     "nvidia.com/gpu": "registry.cn-shanghai.aliyuncs.com/openhydra/paddle:2.6.0-gpu-cuda12.0-cudnn8.9-trt8.6-jlab",
+                      "mthreads.com/sgpu-memory":"ubuntu:20.04",
                     "amd.com/gpu": "registry.cn-shanghai.aliyuncs.com/openhydra/paddle:2.6.0-gpu-cuda12.0-cudnn8.9-trt8.6-jlab"
                 },
                 "icon_name": "PaddlePaddle.png",

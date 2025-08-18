@@ -1,0 +1,7 @@
+apiVersion: open-hydra-server.openhydra.io/v1
+kind: OpenHydraUser
+metadata:
+  name: user1
+spec:
+  password: password
+  role: 2

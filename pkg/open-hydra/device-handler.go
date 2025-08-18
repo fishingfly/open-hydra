@@ -4,15 +4,14 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
-	"os"
-	"strconv"
-
 	"open-hydra/cmd/open-hydra-server/app/config"
 	xDeviceV1 "open-hydra/pkg/apis/open-hydra-api/device/core/v1"
 	v1 "open-hydra/pkg/apis/open-hydra-api/user/core/v1"
 	envApi "open-hydra/pkg/open-hydra/apis"
 	"open-hydra/pkg/open-hydra/k8s"
 	"open-hydra/pkg/util"
+	"os"
+	"strconv"
 
 	"github.com/emicklei/go-restful/v3"
 	coreV1 "k8s.io/api/core/v1"
@@ -30,6 +29,7 @@ func (builder *OpenHydraRouteBuilder) AddDeviceListRoute() {
 }
 
 func (builder *OpenHydraRouteBuilder) DeviceListRouteHandler(request *restful.Request, response *restful.Response) {
+
 	filter := request.QueryParameters("group")
 	fmt.Println(filter)
 
@@ -306,6 +306,7 @@ func (builder *OpenHydraRouteBuilder) DeviceCreateRouteHandler(request *restful.
 		args = plugins.Sandboxes[reqDevice.Spec.SandboxName].Args
 		ports = make(map[string]int)
 		for _, port := range plugins.Sandboxes[reqDevice.Spec.SandboxName].Ports {
+
 			ports[port.Name] = int(port.Port)
 		}
 		// set image with different hardware type if match
@@ -566,8 +567,7 @@ func (builder *OpenHydraRouteBuilder) CombineReqLimit(postDevice xDeviceV1.Devic
 func (builder *OpenHydraRouteBuilder) BuildGpu(postDevice xDeviceV1.Device, serverConfig *config.OpenHydraServerConfig) envApi.GpuSet {
 	result := envApi.GpuSet{
 		GpuDriverName: serverConfig.DefaultGpuDriver,
-		// Gpu:           postDevice.Spec.DeviceGpu,
-		Gpu: 8,
+		Gpu:           postDevice.Spec.DeviceGpu,
 	}
 
 	if result.Gpu == 0 && serverConfig.UseDefaultGpuConfigWhenZeroIsGiven {
